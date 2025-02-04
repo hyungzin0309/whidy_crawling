@@ -48,7 +48,7 @@ public class LocationMatcher {
     }
 
     private static List<Cafe> getCafeList() {
-        String cafeDataFilePath = "/Users/ddong_goo/Desktop/document/personal_project/crawling/data/cafe.json";
+        String cafeDataFilePath = "/Users/ddong_goo/Desktop/document/personal_project/crawling/cafe-list.json";
 
         try (BufferedReader reader = new BufferedReader(new FileReader(cafeDataFilePath))) {
             Gson gson = new Gson();

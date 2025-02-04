@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SimpleCrawler {
 
+    public static String root = "/Users/ddong_goo/Desktop/document/personal_project/crawling";
+
     public static Gson gson = new Gson();
     public static List<CafeDetail> cafeDetails = new ArrayList<>();
     private static final Map<String, StringBuilder> logPerThread = new HashMap<>();
     private static final List<String> notCrawlingKeywords = new ArrayList<>();
-    //    private static List<String> cafesList = List.of("서울 중구 인현동2가 197 홍콩티 본점", "매머드익스프레스 동양미래대점");
-    //    private static List<String> cafesList = List.of("서울 영등포구 여의도동 17 빽다방 KBS본관점", "서울 종로구 동숭동 25-25 정원에서");
 
     private static final StringBuilder totalLog = new StringBuilder();
     private static final StringBuilder errorKeywordsLogs = new StringBuilder();
@@ -87,10 +87,10 @@ public class SimpleCrawler {
             log.info("탐색 카페 수 {}",currentIndex);
         }
 
-        String resultDataFilePath = String.format("/Users/ddong_goo/Desktop/document/personal_project/crawling/simple_data/cafeDetail/cafeDetail%d.json", lastIndex);
-        String logFilePath = String.format("/Users/ddong_goo/Desktop/document/personal_project/crawling/simple_data/logs/log%d.log", lastIndex);
-        String errorKeywords = String.format("/Users/ddong_goo/Desktop/document/personal_project/crawling/simple_data/recrawl_target/errorKeywords.txt");
-        String notCrawledListFilePath = String.format("/Users/ddong_goo/Desktop/document/personal_project/crawling/simple_data/recrawl_target/notCrawled.txt");
+        String resultDataFilePath = String.format(root + "/simple_data/cafeDetail/cafeDetail%d.json", lastIndex);
+        String logFilePath = String.format(root + "/simple_data/logs/log%d.log", lastIndex);
+        String errorKeywords = String.format(root + "/simple_data/recrawl_target/errorKeywords.txt");
+        String notCrawledListFilePath = String.format(root + "/simple_data/recrawl_target/notCrawled.txt");
 
         try (FileWriter resultData = new FileWriter(resultDataFilePath);
              FileWriter errorKeywordsFile = new FileWriter(errorKeywords,true);
@@ -307,7 +307,7 @@ public class SimpleCrawler {
     }
 
     private static void setNotCrawlingKeyword(){
-        String notCrawlingKeyword = "/Users/ddong_goo/Desktop/document/personal_project/crawling/data/수집제외대상.txt";
+        String notCrawlingKeyword = root + "/data/수집제외대상.txt";
         try (BufferedReader br = new BufferedReader(new FileReader(notCrawlingKeyword))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -319,7 +319,7 @@ public class SimpleCrawler {
     }
 
     private static List<Cafe> getCafeList() {
-        String cafeDataFilePath = "/Users/ddong_goo/Desktop/document/personal_project/crawling/data/cafe.json";
+        String cafeDataFilePath = root + "/cafe-list.json";
 
         try (BufferedReader reader = new BufferedReader(new FileReader(cafeDataFilePath))) {
             Gson gson = new Gson();

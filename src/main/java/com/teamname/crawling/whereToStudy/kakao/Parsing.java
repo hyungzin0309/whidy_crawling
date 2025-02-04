@@ -11,7 +11,7 @@ import java.util.List;
 public class Parsing {
 
     public static void main(String[] args) {
-        String filePath = "/Users/ddong_goo/Desktop/document/personal_project/crawling/data/cafe.json";
+        String filePath = "/Users/ddong_goo/Desktop/document/personal_project/crawling/cafe-list.json";
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             Gson gson = new Gson();
