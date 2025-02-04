@@ -219,3 +219,4 @@ gradle-app.setting
 
 src/main/resources/application-*.yml
 /src/main/java/com/spam/whidy/test/*
+/data
