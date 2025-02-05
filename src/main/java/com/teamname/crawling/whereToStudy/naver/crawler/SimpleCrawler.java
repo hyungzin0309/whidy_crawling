@@ -41,13 +41,9 @@ public class SimpleCrawler {
     private static int currentIndex = 0;
 
     public static void main(String[] args) throws Exception{
-        Scanner sc = new Scanner(System.in);
-        System.out.println("start index : ");
-        int startIndex = sc.nextInt();
-        System.out.println("end index : ");
-        int lastIndex = sc.nextInt();
-        System.out.println("threads : ");
-        int threads = sc.nextInt();
+        int startIndex = 8;
+        int lastIndex = 9;
+        int threads = 1;
         List<Cafe> cafes = getCafeList();
         setNotCrawlingKeyword();
         ExecutorService executor = Executors.newFixedThreadPool(threads);
@@ -94,8 +90,8 @@ public class SimpleCrawler {
             log.info("탐색 카페 수 {}",currentIndex);
         }
 
-        String resultDataFilePath = PathConverter.convertPath(String.format(root + "/data/simple_data/cafeDetail/cafeDetail%d.json", lastIndex));
-        String logFilePath = PathConverter.convertPath(String.format(root + "/data/simple_data/logs/log%d.log", lastIndex));
+        String resultDataFilePath = PathConverter.convertPath(String.format(root + "/data/simple_data/cafeDetail/cafeDetail%d-%d.json", startIndex, lastIndex));
+        String logFilePath = PathConverter.convertPath(String.format(root + "/data/simple_data/logs/log%d-%d.log", startIndex, lastIndex));
         String errorKeywords = PathConverter.convertPath(String.format(root + "/data/simple_data/recrawl_target/errorKeywords.txt"));
         String notCrawledListFilePath = PathConverter.convertPath(String.format(root + "/data/simple_data/recrawl_target/notCrawled.txt"));
 
