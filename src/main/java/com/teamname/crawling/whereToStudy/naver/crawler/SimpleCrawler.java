@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SimpleCrawler {
 
-    public static String root = "/Users/ddong_goo/Desktop/document/personal_project/crawling/simple_data";
+    public static String root = "/Users/ddong_goo/Desktop/document/personal_project/crawling";
     public static String driver = "/Users/ddong_goo/desktop/document/tool/chrome_driver/131/chromedriver";
 
     public static Gson gson = new Gson();
@@ -94,10 +94,10 @@ public class SimpleCrawler {
             log.info("탐색 카페 수 {}",currentIndex);
         }
 
-        String resultDataFilePath = PathConverter.convertPath(String.format(root + "/cafeDetail/cafeDetail%d.json", lastIndex));
-        String logFilePath = PathConverter.convertPath(String.format(root + "/logs/log%d.log", lastIndex));
-        String errorKeywords = PathConverter.convertPath(String.format(root + "/recrawl_target/errorKeywords.txt"));
-        String notCrawledListFilePath = PathConverter.convertPath(String.format(root + "/recrawl_target/notCrawled.txt"));
+        String resultDataFilePath = PathConverter.convertPath(String.format(root + "/data/simple_data/cafeDetail/cafeDetail%d.json", lastIndex));
+        String logFilePath = PathConverter.convertPath(String.format(root + "/data/simple_data/logs/log%d.log", lastIndex));
+        String errorKeywords = PathConverter.convertPath(String.format(root + "/data/simple_data/recrawl_target/errorKeywords.txt"));
+        String notCrawledListFilePath = PathConverter.convertPath(String.format(root + "/data/simple_data/recrawl_target/notCrawled.txt"));
 
         try (FileWriter resultData = new FileWriter(resultDataFilePath);
              FileWriter errorKeywordsFile = new FileWriter(errorKeywords,true);
@@ -314,7 +314,7 @@ public class SimpleCrawler {
     }
 
     private static void setNotCrawlingKeyword(){
-        String notCrawlingKeyword = PathConverter.convertPath(root + "/data/수집제외대상.txt");
+        String notCrawlingKeyword = PathConverter.convertPath(root + "/data/data/수집제외대상.txt");
         try (BufferedReader br = new BufferedReader(new FileReader(notCrawlingKeyword))) {
             String line;
             while ((line = br.readLine()) != null) {
