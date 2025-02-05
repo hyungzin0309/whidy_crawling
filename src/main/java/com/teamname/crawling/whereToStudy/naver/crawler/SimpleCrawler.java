@@ -314,7 +314,7 @@ public class SimpleCrawler {
     }
 
     private static void setNotCrawlingKeyword(){
-        String notCrawlingKeyword = PathConverter.convertPath(root + "/data/data/수집제외대상.txt");
+        String notCrawlingKeyword = PathConverter.convertPath(root + "/수집제외대상.txt");
         try (BufferedReader br = new BufferedReader(new FileReader(notCrawlingKeyword))) {
             String line;
             while ((line = br.readLine()) != null) {
