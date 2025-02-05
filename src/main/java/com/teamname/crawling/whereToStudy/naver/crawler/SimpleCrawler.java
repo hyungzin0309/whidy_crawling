@@ -3,6 +3,7 @@ package com.teamname.crawling.whereToStudy.naver.crawler;
 import com.google.gson.Gson;
 import com.teamname.crawling.whereToStudy.kakao.Cafe;
 import com.teamname.crawling.whereToStudy.naver.*;
+import com.teamname.crawling.whereToStudy.util.PathConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
@@ -26,7 +27,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SimpleCrawler {
 
-    public static String root = "/Users/ddong_goo/Desktop/document/personal_project/crawling";
+    public static String root = "/Users/ddong_goo/Desktop/document/personal_project/crawling/simple_data";
+    public static String driver = "/Users/ddong_goo/desktop/document/tool/chrome_driver/131/chromedriver";
 
     public static Gson gson = new Gson();
     public static List<CafeDetail> cafeDetails = new ArrayList<>();
@@ -39,11 +41,16 @@ public class SimpleCrawler {
     private static int currentIndex = 0;
 
     public static void main(String[] args) throws Exception{
-        int startIndex = 8;
-        int lastIndex = 9;
+        Scanner sc = new Scanner(System.in);
+        System.out.println("start index : ");
+        int startIndex = sc.nextInt();
+        System.out.println("end index : ");
+        int lastIndex = sc.nextInt();
+        System.out.println("threads : ");
+        int threads = sc.nextInt();
         List<Cafe> cafes = getCafeList();
         setNotCrawlingKeyword();
-        ExecutorService executor = Executors.newFixedThreadPool(6);
+        ExecutorService executor = Executors.newFixedThreadPool(threads);
 //        for (int i = 0; i < cafes.size(); i++) {
         for (int i = startIndex; i < lastIndex; i++) {
             int finalI = i;
@@ -87,10 +94,10 @@ public class SimpleCrawler {
             log.info("탐색 카페 수 {}",currentIndex);
         }
 
-        String resultDataFilePath = String.format(root + "/simple_data/cafeDetail/cafeDetail%d.json", lastIndex);
-        String logFilePath = String.format(root + "/simple_data/logs/log%d.log", lastIndex);
-        String errorKeywords = String.format(root + "/simple_data/recrawl_target/errorKeywords.txt");
-        String notCrawledListFilePath = String.format(root + "/simple_data/recrawl_target/notCrawled.txt");
+        String resultDataFilePath = PathConverter.convertPath(String.format(root + "/cafeDetail/cafeDetail%d.json", lastIndex));
+        String logFilePath = PathConverter.convertPath(String.format(root + "/logs/log%d.log", lastIndex));
+        String errorKeywords = PathConverter.convertPath(String.format(root + "/recrawl_target/errorKeywords.txt"));
+        String notCrawledListFilePath = PathConverter.convertPath(String.format(root + "/recrawl_target/notCrawled.txt"));
 
         try (FileWriter resultData = new FileWriter(resultDataFilePath);
              FileWriter errorKeywordsFile = new FileWriter(errorKeywords,true);
@@ -203,7 +210,7 @@ public class SimpleCrawler {
     }
 
     private static WebDriver getDriver() {
-        System.setProperty("webdriver.chrome.driver", "/Users/ddong_goo/desktop/document/tool/chrome_driver/131/chromedriver");
+        System.setProperty("webdriver.chrome.driver", driver);
         ChromeOptions options = new ChromeOptions();
 //        options.addArguments("--headless"); // GUI 없는 환경에서 실행
 //        options.addArguments("--disable-gpu"); // GPU 비활성화
@@ -307,7 +314,7 @@ public class SimpleCrawler {
     }
 
     private static void setNotCrawlingKeyword(){
-        String notCrawlingKeyword = root + "/data/수집제외대상.txt";
+        String notCrawlingKeyword = PathConverter.convertPath(root + "/data/수집제외대상.txt");
         try (BufferedReader br = new BufferedReader(new FileReader(notCrawlingKeyword))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -319,7 +326,7 @@ public class SimpleCrawler {
     }
 
     private static List<Cafe> getCafeList() {
-        String cafeDataFilePath = root + "/cafe-list.json";
+        String cafeDataFilePath = PathConverter.convertPath(root + "/cafe-list.json");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(cafeDataFilePath))) {
             Gson gson = new Gson();
