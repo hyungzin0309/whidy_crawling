@@ -122,7 +122,7 @@ public class SimpleCrawler {
 
         element.sendKeys(searchKeyword);
         element.sendKeys(Keys.RETURN);
-        Thread.sleep(500);
+        Thread.sleep(2000);
         element.sendKeys(Keys.RETURN);
 
         // 검색결과 list iframe
