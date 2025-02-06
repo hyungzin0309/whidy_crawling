@@ -124,7 +124,7 @@ public class SimpleCrawler {
         while(true){
             element.sendKeys(Keys.RETURN);
             Thread.sleep(1000);
-            if(!driver.findElement(By.cssSelector("h2.notice_title")).isDisplayed()){
+            if(driver.findElements(By.cssSelector("h2.notice_title")).isEmpty()){
                 break;
             }
         }
