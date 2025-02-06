@@ -114,13 +114,15 @@ public class SimpleCrawler {
     }
 
 
-    private static void crawlCafe(WebDriver driver, String searchKeyword, Long id, String lon, String lat) {
+    private static void crawlCafe(WebDriver driver, String searchKeyword, Long id, String lon, String lat) throws Exception {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
         // 지도 페이지 접속 후 검색어 입력, 제출
         driver.get("https://map.naver.com/v5/");
         WebElement element = driver.findElement(By.cssSelector("input.input_search"));
 
         element.sendKeys(searchKeyword);
+        element.sendKeys(Keys.RETURN);
+        Thread.sleep(500);
         element.sendKeys(Keys.RETURN);
 
         // 검색결과 list iframe
