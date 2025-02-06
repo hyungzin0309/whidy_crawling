@@ -128,7 +128,10 @@ public class SimpleCrawler {
                 break;
             }
         }
-
+        if(!driver.findElements(By.cssSelector("button.sc-9tmukb.eSlske")).isEmpty()){
+            logPerThread.get(driver.toString()).append("[INFO] 검색결과 리스트 없음 \n");
+            return;
+        }
         // 검색결과 list iframe
         try{
             driver.switchTo().frame("searchIframe");
