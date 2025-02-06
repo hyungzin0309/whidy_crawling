@@ -42,7 +42,7 @@ public class SimpleCrawler {
 
     public static void main(String[] args) throws Exception{
         int startIndex = 8;
-        int lastIndex = 14;
+        int lastIndex = 30;
         int threads = 5;
         List<Cafe> cafes = getCafeList();
         setNotCrawlingKeyword();
@@ -122,12 +122,14 @@ public class SimpleCrawler {
 
         element.sendKeys(searchKeyword);
         element.sendKeys(Keys.RETURN);
-        Thread.sleep(2000);
+        Thread.sleep(1000);
         element.sendKeys(Keys.RETURN);
+        Thread.sleep(1000);
+        element.sendKeys(Keys.RETURN);
+        Thread.sleep(2000);
 
         // 검색결과 list iframe
         try{
-            element = new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(By.cssSelector("#searchIframe")));
             driver.switchTo().frame("searchIframe");
             wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("span.YwYLL"))).click();
         }catch (ElementClickInterceptedException e){
