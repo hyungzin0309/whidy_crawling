@@ -121,12 +121,13 @@ public class SimpleCrawler {
         WebElement element = driver.findElement(By.cssSelector("input.input_search"));
 
         element.sendKeys(searchKeyword);
-        element.sendKeys(Keys.RETURN);
-        Thread.sleep(1000);
-        element.sendKeys(Keys.RETURN);
-        Thread.sleep(1000);
-        element.sendKeys(Keys.RETURN);
-        Thread.sleep(2000);
+        while(true){
+            element.sendKeys(Keys.RETURN);
+            Thread.sleep(1000);
+            if(driver.findElement(By.cssSelector("h2.notice_title")).isDisplayed()){
+                break;
+            }
+        }
 
         // 검색결과 list iframe
         try{
