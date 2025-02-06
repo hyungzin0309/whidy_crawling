@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class SimpleCrawler {
 
     public static String root = "/Users/ddong_goo/Desktop/document/personal_project/crawling";
-    public static String driver = "/Users/ddong_goo/desktop/document/tool/chrome_driver/131/chromedriver";
+    public static String driver = "/Users/ddong_goo/desktop/document/tool/chrome_driver/133/chromedriver";
 
     public static Gson gson = new Gson();
     public static List<CafeDetail> cafeDetails = new ArrayList<>();
@@ -42,47 +42,14 @@ public class SimpleCrawler {
 
     public static void main(String[] args) throws Exception{
         int startIndex = 8;
-        int lastIndex = 9;
-        int threads = 1;
+        int lastIndex = 14;
+        int threads = 5;
         List<Cafe> cafes = getCafeList();
         setNotCrawlingKeyword();
         ExecutorService executor = Executors.newFixedThreadPool(threads);
 //        for (int i = 0; i < cafes.size(); i++) {
         for (int i = startIndex; i < lastIndex; i++) {
-            int finalI = i;
-            executor.submit(() -> {
-                currentIndex = finalI;
-                Cafe cafe = cafes.get(finalI);
-                String cafeName = cafe.getAddressName() + " " + cafe.getPlaceName();
-//                String cafeName = cafesList.get(finalI);
-                if(notCrawlingKeywords.stream().filter(cafeName::contains).findFirst().isEmpty()){
-                    WebDriver driver = getDriver();
-                    StringBuilder logBuilder = new StringBuilder();
-                    logPerThread.put(driver.toString(), logBuilder);
-                    try {
-                        Long id = (long)finalI;
-                        logBuilder.append(String.format("\n################### [%d. %s] 카페 서치 시작\n",id, cafeName));
-                        crawlCafe(driver, cafeName, id, cafe.getX(), cafe.getY());
-                        logBuilder.append(String.format("################### [%d. %s] 카페 서치 완료\n",id, cafeName));
-                    }catch (TimeoutException e){
-                        if(e.getMessage().startsWith("Expected condition failed: waiting for element to be clickable: By.cssSelector: #searchIframe")) {
-                            logBuilder.append(String.format("################### [%s] 발견된 대상 없어 서치 종료 (발견된 리스트 없어 서치 종료) : %s\n", cafeName, e.getMessage()));
-                            notCrawledList.append(cafe.getAddressName()).append(",").append(cafe.getRoadAddressName()).append(",").append(cafe.getPlaceName()).append("\n");
-                        }else {
-                            logBuilder.append(String.format("################### [%s] 에러 발생 : %s\n", cafeName, e.getMessage()));
-                            errorKeywordsLogs.append(cafeName).append("\n");
-                        }
-                    } catch (Exception e) {
-                        logBuilder.append(String.format("################### [%s] 에러 발생 : %s\n", cafeName, e.getMessage()));
-                        errorKeywordsLogs.append(cafeName).append("\n");
-                    } finally {
-//                    log.info(logBuilder.toString());
-                        totalLog.append(logBuilder);
-                        driver.quit();
-                    }
-                }
-
-            });
+            execute(executor, i, cafes);
         }
         executor.shutdown();
         while(!executor.isTerminated()){
@@ -110,6 +77,41 @@ public class SimpleCrawler {
         log.info("최종 수집 카페 수 : {}", cafeDetails.size());
     }
 
+    private static void execute(ExecutorService executor, int index, List<Cafe> cafes) {
+        executor.submit(() -> {
+            currentIndex = index;
+            Cafe cafe = cafes.get(index);
+            String cafeName = cafe.getAddressName() + " " + cafe.getPlaceName();
+//                String cafeName = cafesList.get(finalI);
+            if(notCrawlingKeywords.stream().filter(cafeName::contains).findFirst().isEmpty()){
+                WebDriver driver = getDriver();
+                StringBuilder logBuilder = new StringBuilder();
+                logPerThread.put(driver.toString(), logBuilder);
+                try {
+                    Long id = (long)index;
+                    logBuilder.append(String.format("\n################### [%d. %s] 카페 서치 시작\n",id, cafeName));
+                    crawlCafe(driver, cafeName, id, cafe.getX(), cafe.getY());
+                    logBuilder.append(String.format("################### [%d. %s] 카페 서치 완료\n",id, cafeName));
+                }catch (TimeoutException e){
+                    if(e.getMessage().startsWith("Expected condition failed: waiting for element to be clickable: By.cssSelector: #searchIframe")) {
+                        logBuilder.append(String.format("################### [%s] 발견된 대상 없어 서치 종료 (발견된 리스트 없어 서치 종료) : %s\n", cafeName, e.getMessage()));
+                        notCrawledList.append(cafe.getAddressName()).append(",").append(cafe.getRoadAddressName()).append(",").append(cafe.getPlaceName()).append("\n");
+                    }else {
+                        logBuilder.append(String.format("################### [%s] 에러 발생 : %s\n", cafeName, e.getMessage()));
+                        errorKeywordsLogs.append(cafeName).append("\n");
+                    }
+                } catch (Exception e) {
+                    logBuilder.append(String.format("################### [%s] 에러 발생 : %s\n", cafeName, e.getMessage()));
+                    errorKeywordsLogs.append(cafeName).append("\n");
+                } finally {
+//                    log.info(logBuilder.toString());
+                    totalLog.append(logBuilder);
+                    driver.quit();
+                }
+            }
+
+        });
+    }
 
 
     private static void crawlCafe(WebDriver driver, String searchKeyword, Long id, String lon, String lat) {
