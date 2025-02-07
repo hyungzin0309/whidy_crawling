@@ -15,12 +15,12 @@ import java.util.List;
 
 public class CafeDataMerge {
 
-    private static final List<String> cafeDataFiles = List.of("cafeDetail1.json","cafeDetail4.json","cafeDetail7.json","cafeDetail12.json","cafeDetail60.json","cafeDetail120.json","cafeDetail150.json","cafeDetail175.json");
+    private static final List<String> cafeDataFiles = List.of("cafeDetail0-100.json", "cafeDetail100-300.json");
     private static final List<CafeDetail> totalData = new ArrayList<>();
     public static Gson gson = new Gson();
 
     public static void main(String[] args) throws Exception{
-        Path directory = Paths.get("/Users/ddong_goo/Desktop/document/personal_project/crawling/data/cafeDetail/");
+        Path directory = Paths.get("/Users/ddong_goo/Desktop/document/personal_project/crawling/data/simple_data/cafeDetail/");
         for(Path fileName : Files.list(directory).toList()){
             String filePath = fileName.toString();
             try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -31,7 +31,7 @@ public class CafeDataMerge {
             }
         }
 
-        String totalDataFile = "/Users/ddong_goo/Desktop/document/personal_project/crawling/data/totalCafeDetail.json";
+        String totalDataFile = "/Users/ddong_goo/Desktop/document/personal_project/crawling/data/simple_data/totalCafeDetail.json";
         try (FileWriter resultData = new FileWriter(totalDataFile)){
              resultData.write(gson.toJson(totalData));
         }
