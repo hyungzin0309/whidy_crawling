@@ -41,9 +41,9 @@ public class SimpleCrawler {
     private static int currentIndex = 0;
 
     public static void main(String[] args) throws Exception{
-        int startIndex = 8;
-        int lastIndex = 30;
-        int threads = 5;
+        int startIndex = 12;
+        int lastIndex = 13;
+        int threads = 1;
         List<Cafe> cafes = getCafeList();
         setNotCrawlingKeyword();
         ExecutorService executor = Executors.newFixedThreadPool(threads);
@@ -121,13 +121,18 @@ public class SimpleCrawler {
         WebElement element = driver.findElement(By.cssSelector("input.input_search"));
 
         element.sendKeys(searchKeyword);
+        int waittime = 1;
         while(true){
             element.sendKeys(Keys.RETURN);
-            Thread.sleep(1000);
+            Thread.sleep(1000 * waittime);
             if(driver.findElements(By.cssSelector("h2.notice_title")).isEmpty()){
                 break;
             }
+            if(waittime < 10){
+                waittime++;
+            }
         }
+
         if(!driver.findElements(By.cssSelector("button.sc-9tmukb.eSlske")).isEmpty()){
             logPerThread.get(driver.toString()).append("[INFO] 검색결과 리스트 없음 \n");
             return;
@@ -150,7 +155,10 @@ public class SimpleCrawler {
         String address = findText(driver, wait, ".LDgIH", "주소 수집");
         String cafeName = findText(driver, wait, ".GHAhO", "카페 이름");
         String reviewNumString = findText(driver, wait, ".PXMot>a", "방문자 리뷰 수 수집");
-        String image = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".QX0J7>.K0PDV"))).getAttribute("src");
+
+        click(driver, wait, ".U7pYf", "영업시간 더 보기");
+        List<BusinessHour> times = findElements(driver, new WebDriverWait(driver, Duration.ofSeconds(15)), "span.A_cdD", "영업시간 리스트 수집").stream().map(e -> getBusinessHour(driver, wait, e)).toList();
+
         List<String> images = findElements(driver, new WebDriverWait(driver, Duration.ofSeconds(5)), ".QX0J7>.K0PDV", "사진 수집")
                 .stream().map(e -> e.getAttribute("src")).toList();
 
@@ -197,8 +205,9 @@ public class SimpleCrawler {
                 .reviews(reviews)
                 .reviewNum(reviewNum)
                 .menuList(menuList)
+                .times(times)
                 .longitude(Double.parseDouble(lon))
-                .longitude(Double.parseDouble(lat))
+                .latitude(Double.parseDouble(lat))
                 .images(images)
                 .build();
         cafeDetails.add(detail);
